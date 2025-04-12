@@ -6,6 +6,12 @@ const webAppUrl = process.env.WEBAPP_URL;
 
 const bot = new TelegramBot(token, { polling: true });
 
+// 👇 Проверка, что бот получает сообщения
+bot.on("message", (msg) => {
+  console.log("📨 Пришло сообщение от пользователя:", msg.from);
+});
+
+// 👇 Кнопка запуска WebApp
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
