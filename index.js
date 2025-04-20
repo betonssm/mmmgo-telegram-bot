@@ -1,28 +1,38 @@
 require("dotenv").config();
-
+const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
 
-const token = process.env.BOT_TOKEN.trim();
-const webAppUrl = process.env.WEBAPP_URL;
+const app = express();
+app.use(express.json());
 
-const bot = new TelegramBot(token, { polling: true });
-bot.getMe().then(botInfo => {
-  console.log("✅ Бот подключён как:", botInfo.username);
-}).catch(err => {
-  console.error("❌ Ошибка getMe:", err);
+const token = process.env.BOT_TOKEN;
+const webAppUrl = process.env.WEBAPP_URL;
+const port = process.env.PORT || 3000;
+
+const bot = new TelegramBot(token);
+bot.setWebHook(`${process.env.BASE_URL}/bot${token}`);
+
+// 🔎 Проверка, что бот подключён
+bot.getMe()
+  .then((info) => console.log("✅ Бот подключён как:", info.username))
+  .catch((err) => console.error("❌ Ошибка getMe:", err));
+
+// 🔄 Принимаем обновления от Telegram
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
 });
 
-// 🔎 Проверка, что бот получает любые сообщения
+// 📥 Любое сообщение
 bot.on("message", (msg) => {
   console.log("📨 Пришло сообщение от пользователя:", msg.from);
 });
 
-// 🧠 Обработчик команды /start с возможным параметром ?start=...
+// 🧠 Команда /start
 bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   const chatId = msg.chat.id;
-  const refId = match[1]; // если есть ID от пригласившего
+  const refId = match[1];
 
-  // Формируем ссылку: с ?ref=... или без
   const urlWithRef = refId
     ? `${webAppUrl}?ref=${refId}`
     : webAppUrl;
@@ -33,15 +43,15 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
         [
           {
             text: "▶️ Играть в МММ GO",
-            web_app: {
-              url: urlWithRef,
-            },
+            web_app: { url: urlWithRef },
           },
         ],
       ],
     },
-  })
-  .catch((err) => {
-    console.error("❌ Ошибка при отправке WebApp-кнопки:", err);
   });
+});
+
+// 🚀 Запускаем Express
+app.listen(port, () => {
+  console.log(`🚀 Сервер запущен на порту ${port}`);
 });
