@@ -21,20 +21,21 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
     ? `${webAppUrl}?ref=${refId}`
     : webAppUrl;
 
-    bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "▶️ Играть в МММ GO",
-              web_app: {
-                url: urlWithRef,
-              },
+  bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: "▶️ Играть в МММ GO",
+            web_app: {
+              url: urlWithRef,
             },
-          ],
+          },
         ],
-      },
-    })
-    .catch((err) => {
-      console.error("❌ Ошибка при отправке WebApp-кнопки:", err);
-    });
+      ],
+    },
+  })
+  .catch((err) => {
+    console.error("❌ Ошибка при отправке WebApp-кнопки:", err);
+  });
+});
