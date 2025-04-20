@@ -1,6 +1,4 @@
 require("dotenv").config();
-console.log("📏 Длина токена:", token.length);
-console.log("🧼 Токен заканчивается на символ:", JSON.stringify(token[token.length - 1]));
 const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
 
@@ -11,6 +9,8 @@ const token = process.env.BOT_TOKEN;
 const webAppUrl = process.env.WEBAPP_URL;
 const baseUrl = process.env.BASE_URL;
 const port = process.env.PORT || 3000;
+console.log("📏 Длина токена:", token.length);
+console.log("🧼 Токен заканчивается на символ:", JSON.stringify(token[token.length - 1]));
 
 const secretPath = "/bot-webhook"; // безопасный путь вместо токена
 
