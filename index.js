@@ -1,8 +1,10 @@
 require("dotenv").config();
 console.log("🔐 BOT_TOKEN из ENV:", process.env.BOT_TOKEN);
+console.log("📏 Длина токена:", process.env.BOT_TOKEN.length);
+console.log("🧼 Токен без обрезки:", JSON.stringify(process.env.BOT_TOKEN));
 const TelegramBot = require("node-telegram-bot-api");
 
-const token = process.env.BOT_TOKEN;
+const token = process.env.BOT_TOKEN.trim();
 const webAppUrl = process.env.WEBAPP_URL;
 
 const bot = new TelegramBot(token, { polling: true });
