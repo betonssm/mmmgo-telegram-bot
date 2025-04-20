@@ -6,6 +6,11 @@ const token = process.env.BOT_TOKEN;
 const webAppUrl = process.env.WEBAPP_URL;
 
 const bot = new TelegramBot(token, { polling: true });
+bot.getMe().then(botInfo => {
+  console.log("✅ Бот подключён как:", botInfo.username);
+}).catch(err => {
+  console.error("❌ Ошибка getMe:", err);
+});
 
 // 🔎 Проверка, что бот получает любые сообщения
 bot.on("message", (msg) => {
