@@ -1,4 +1,6 @@
 require("dotenv").config();
+console.log("📏 Длина токена:", token.length);
+console.log("🧼 Токен заканчивается на символ:", JSON.stringify(token[token.length - 1]));
 const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
 
