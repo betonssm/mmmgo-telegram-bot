@@ -7,35 +7,36 @@ app.use(express.json());
 
 const token = process.env.BOT_TOKEN;
 const webAppUrl = process.env.WEBAPP_URL;
+const baseUrl = process.env.BASE_URL;
 const port = process.env.PORT || 3000;
 
-const bot = new TelegramBot(token);
-bot.setWebHook(`${process.env.BASE_URL}/bot${token}`);
+const secretPath = "/bot-webhook"; // безопасный путь вместо токена
 
-// 🔎 Проверка, что бот подключён
+// Инициализация бота без polling
+const bot = new TelegramBot(token);
+bot.setWebHook(`${baseUrl}${secretPath}`);
+
+// Проверка подключения
 bot.getMe()
   .then((info) => console.log("✅ Бот подключён как:", info.username))
   .catch((err) => console.error("❌ Ошибка getMe:", err));
 
-// 🔄 Принимаем обновления от Telegram
-app.post(`/bot${token}`, (req, res) => {
+// Webhook-обработчик
+app.post(secretPath, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
 
-// 📥 Любое сообщение
+// Обработка любого сообщения
 bot.on("message", (msg) => {
   console.log("📨 Пришло сообщение от пользователя:", msg.from);
 });
 
-// 🧠 Команда /start
+// Обработка /start
 bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   const chatId = msg.chat.id;
   const refId = match[1];
-
-  const urlWithRef = refId
-    ? `${webAppUrl}?ref=${refId}`
-    : webAppUrl;
+  const urlWithRef = refId ? `${webAppUrl}?ref=${refId}` : webAppUrl;
 
   bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
     reply_markup: {
@@ -51,7 +52,7 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   });
 });
 
-// 🚀 Запускаем Express
+// Запуск сервера
 app.listen(port, () => {
   console.log(`🚀 Сервер запущен на порту ${port}`);
 });
