@@ -58,6 +58,10 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
     },
   });
 });
+// Тестовая проверка, чтобы убедиться, что маршрут существует
+app.get("/bot-webhook", (req, res) => {
+  res.send("✅ Webhook работает");
+});
 
 // Запуск сервера
 app.listen(port, () => {
