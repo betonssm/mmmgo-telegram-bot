@@ -41,7 +41,9 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   const refId = match[1];
   console.log("✅ Получена команда /start");
   console.log("➡️ refId:", refId);
-  const urlWithRef = refId ? `${webAppUrl}?ref=${refId}` : webAppUrl;
+  const urlWithRef = refId
+  ? `https://mmmgo-frontend.onrender.com?ref=${refId}`
+  : "https://mmmgo-frontend.onrender.com";
 
   bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
     reply_markup: {
