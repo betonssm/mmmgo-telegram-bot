@@ -38,6 +38,8 @@ bot.on("message", (msg) => {
 bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   const chatId = msg.chat.id;
   const refId = match[1];
+  console.log("✅ Получена команда /start");
+  console.log("➡️ refId:", refId);
   const urlWithRef = refId ? `${webAppUrl}?ref=${refId}` : webAppUrl;
 
   bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
