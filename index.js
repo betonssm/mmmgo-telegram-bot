@@ -25,6 +25,7 @@ bot.getMe()
 
 // Webhook-обработчик
 app.post(secretPath, (req, res) => {
+  console.log("📥 Получен webhook от Telegram:", JSON.stringify(req.body, null, 2));
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
