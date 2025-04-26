@@ -45,12 +45,12 @@ bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
   ? `https://mmmgo-frontend.onrender.com?ref=${refId}`
   : "https://mmmgo-frontend.onrender.com";
 
-  bot.sendMessage(chatId, "👋 Добро пожаловать в МММ GO! 💸\nЖми кнопку ниже, чтобы начать:", {
+  bot.sendMessage(chatId, "👋 Добро пожаловать в МММGO! 💸\nЖми кнопку ниже, чтобы начать:", {
     reply_markup: {
       inline_keyboard: [
         [
           {
-            text: "▶️ Играть в МММ GO",
+            text: "🎮 Играть в МММGO",
             web_app: { url: urlWithRef },
           },
         ],
