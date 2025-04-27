@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
-const fetch = require("node-fetch"); // добавь обязательно fetch!
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 
 const app = express();
 app.use(express.json());
