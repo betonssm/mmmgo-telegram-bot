@@ -35,35 +35,38 @@ bot.on("message", (msg) => {
   console.log("📨 Пришло сообщение от пользователя:", msg.from);
 });
 
-// Обработка /start
-bot.onText(/\/start(?:\s(.+))?/, (msg, match) => {
+bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   const chatId = msg.chat.id;
-  const refId = match[1];
-  console.log("✅ Получена команда /start");
-  console.log("➡️ refId:", refId);
-  const urlWithRef = refId
-  ? `https://mmmgo-frontend.onrender.com?ref=${refId}`
-  : "https://mmmgo-frontend.onrender.com";
+  const ref = match[1];
 
-  bot.sendMessage(chatId, "👋 Добро пожаловать в МММGO! 💸\nЖми кнопку ниже, чтобы начать:", {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          {
-            text: "🎮 Играть в МММGO",
-            web_app: { url: urlWithRef },
-          },
+  try {
+    const telegramId = msg.from.id;
+
+    // Получаем игрока
+    const playerResponse = await fetch(`https://mmmgo-backend.onrender.com/player/${telegramId}`);
+    const player = await playerResponse.json();
+
+    if (!player.refSource && ref && ref !== telegramId.toString()) {
+      await fetch("https://mmmgo-backend.onrender.com/player/set-ref", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ telegramId, refSource: ref }),
+      });
+      console.log(`✅ Реферал ${ref} установлен для ${telegramId}`);
+    } else {
+      console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
+    }
+
+    // Отправляем кнопку WebApp
+    await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "🚀 Играть в MMMGO", web_app: { url: ref ? `https://mmmgo-frontend.onrender.com?ref=${ref}` : "https://mmmgo-frontend.onrender.com" }}],
         ],
-      ],
-    },
-  });
-});
-// Тестовая проверка, чтобы убедиться, что маршрут существует
-app.get("/bot-webhook", (req, res) => {
-  res.send("✅ Webhook работает");
-});
-
-// Запуск сервера
-app.listen(port, () => {
-  console.log(`🚀 Сервер запущен на порту ${port}`);
+      },
+    });
+  } catch (error) {
+    console.error("Ошибка в /start:", error);
+    await bot.sendMessage(chatId, "⚠️ Произошла ошибка при старте. Попробуйте позже.");
+  }
 });
