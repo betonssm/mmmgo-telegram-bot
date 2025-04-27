@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
+const fetch = require("node-fetch"); // добавь обязательно fetch!
 
 const app = express();
 app.use(express.json());
@@ -9,10 +10,11 @@ const token = process.env.BOT_TOKEN;
 const webAppUrl = process.env.WEBAPP_URL;
 const baseUrl = process.env.BASE_URL;
 const port = process.env.PORT || 3000;
+
 console.log("📏 Длина токена:", token.length);
 console.log("🧼 Токен заканчивается на символ:", JSON.stringify(token[token.length - 1]));
 
-const secretPath = "/bot-webhook"; // безопасный путь вместо токена
+const secretPath = "/bot-webhook";
 
 // Инициализация бота без polling
 const bot = new TelegramBot(token);
@@ -30,11 +32,7 @@ app.post(secretPath, (req, res) => {
   res.sendStatus(200);
 });
 
-// Обработка любого сообщения
-bot.on("message", (msg) => {
-  console.log("📨 Пришло сообщение от пользователя:", msg.from);
-});
-
+// Обработка /start
 bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   const chatId = msg.chat.id;
   const ref = match[1];
@@ -42,7 +40,6 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   try {
     const telegramId = msg.from.id;
 
-    // Получаем игрока
     const playerResponse = await fetch(`https://mmmgo-backend.onrender.com/player/${telegramId}`);
     const player = await playerResponse.json();
 
@@ -57,11 +54,13 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
       console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
     }
 
-    // Отправляем кнопку WebApp
     await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
       reply_markup: {
         inline_keyboard: [
-          [{ text: "🚀 Играть в MMMGO", web_app: { url: ref ? `https://mmmgo-frontend.onrender.com?ref=${ref}` : "https://mmmgo-frontend.onrender.com" }}],
+          [{
+            text: "🚀 Играть в MMMGO",
+            web_app: { url: ref ? `https://mmmgo-frontend.onrender.com?ref=${ref}` : "https://mmmgo-frontend.onrender.com" },
+          }],
         ],
       },
     });
@@ -69,4 +68,9 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
     console.error("Ошибка в /start:", error);
     await bot.sendMessage(chatId, "⚠️ Произошла ошибка при старте. Попробуйте позже.");
   }
+});
+
+// 🔥 ВАЖНО! Запуск сервера:
+app.listen(port, () => {
+  console.log(`🚀 Сервер запущен на порту ${port}`);
 });
