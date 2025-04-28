@@ -40,7 +40,9 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   try {
     const telegramId = msg.from.id;
 
-    const playerResponse = await fetch(`https://mmmgo-backend.onrender.com/player/${telegramId}`);
+    const playerResponse = await fetch(
+      `https://mmmgo-backend.onrender.com/player/${telegramId}${ref ? `?ref=${ref}` : ""}`
+    );
     const player = await playerResponse.json();
 
     if (!player.refSource && ref && ref !== telegramId.toString()) {
