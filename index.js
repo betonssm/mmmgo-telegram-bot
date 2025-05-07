@@ -55,7 +55,9 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
       console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
     }
 
-    const webAppStartLink = `https://t.me/mmmgo_bot?startapp=ref_${telegramId}`;
+    const webAppStartLink = ref
+  ? `${webAppUrl}?ref=${ref}`
+  : `${webAppUrl}?ref=${telegramId}`;
     await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
       reply_markup: {
         inline_keyboard: [
