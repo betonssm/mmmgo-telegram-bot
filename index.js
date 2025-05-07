@@ -17,7 +17,7 @@ console.log("🧼 Токен заканчивается на символ:", JSO
 const secretPath = "/bot-webhook";
 
 // Инициализация бота без polling
-const bot = new TelegramBot(token);
+const bot = new TelegramBot(token, { polling: false });
 bot.setWebHook(`${baseUrl}${secretPath}`);
 bot.getWebhookInfo().then(info => {
   console.log("🔗 Webhook подключён к:", info.url || "не установлено");
