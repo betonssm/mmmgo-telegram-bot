@@ -124,6 +124,26 @@ bot.on("message", async (msg) => {
 
   await bot.sendMessage(msg.chat.id, "✅ Платёж успешно обработан!");
 });
+// Обработка кнопки "Играть в MMMGO" через Game Platform
+bot.on("callback_query", async (query) => {
+  const gameName = query.game_short_name;
+  const chatId = query.from.id;
+
+  if (gameName !== "mmmgo_game") {
+    return bot.answerCallbackQuery({
+      callback_query_id: query.id,
+      text: "❌ Игра не найдена.",
+      show_alert: true,
+    });
+  }
+
+  const gameUrl = `https://mmmgo-frontend.onrender.com?startapp=ref_${chatId}`;
+
+  await bot.answerCallbackQuery({
+    callback_query_id: query.id,
+    url: gameUrl,
+  });
+});
 
 // 🔥 ВАЖНО! Запуск сервера:
 app.listen(port, () => {
