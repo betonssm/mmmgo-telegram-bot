@@ -74,6 +74,7 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   }
 });
 bot.on("message", async (msg) => {
+    console.log("📨 Сообщение в бота:", JSON.stringify(msg, null, 2));
   const chatId = msg.chat.id;
   const telegramId = msg.from.id;
   const userName = msg.from.first_name;
@@ -141,6 +142,7 @@ bot.on("message", async (msg) => {
 bot.on("pre_checkout_query", (query) => {
   bot.answerPreCheckoutQuery(query.id, true);
 });
+
 // 🔥 ВАЖНО! Запуск сервера:
 app.listen(port, () => {
   console.log(`🚀 Сервер запущен на порту ${port}`);
