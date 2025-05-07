@@ -56,21 +56,24 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
       console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
     }
 
-    await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
+    const webAppStartLink = `https://t.me/mmmgo_bot?startapp=ref_${telegramId}`;
+
+    await bot.sendMessage(chatId, `🎮 Добро пожаловать в MMMGO!\n\n🔗 Твоя ссылка: ${webAppStartLink}`, {
       reply_markup: {
         inline_keyboard: [
           [{
             text: "🚀 Играть в MMMGO",
-            web_app: { url: ref ? `https://mmmgo-frontend.onrender.com?ref=${ref}` : "https://mmmgo-frontend.onrender.com" },
+            url: webAppStartLink
           }],
         ],
       },
     });
+
   } catch (error) {
     console.error("Ошибка в /start:", error);
     await bot.sendMessage(chatId, "⚠️ Произошла ошибка при старте. Попробуйте позже.");
   }
-});
+}); // ← Вот здесь ЗАКРЫВАЕТСЯ onText
 
 // 🔥 ВАЖНО! Запуск сервера:
 app.listen(port, () => {
