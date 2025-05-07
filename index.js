@@ -19,6 +19,10 @@ const secretPath = "/bot-webhook";
 // Инициализация бота без polling
 const bot = new TelegramBot(token);
 bot.setWebHook(`${baseUrl}${secretPath}`);
+bot.getWebhookInfo().then(info => {
+  console.log("🔗 Webhook подключён к:", info.url || "не установлено");
+  console.log("🛑 Последняя ошибка:", info.last_error_message || "нет");
+});
 
 // Проверка подключения
 bot.getMe()
