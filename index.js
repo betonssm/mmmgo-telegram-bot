@@ -148,6 +148,23 @@ bot.on("message", async (msg) => {
 bot.on("pre_checkout_query", (query) => {
   bot.answerPreCheckoutQuery(query.id, true);
 });
+// 🔬 Команда для теста WebApp-кнопки
+bot.onText(/\/webtest/, async (msg) => {
+  const chatId = msg.chat.id;
+
+  await bot.sendMessage(chatId, "🔧 Тестовая WebApp-кнопка:", {
+    reply_markup: {
+      inline_keyboard: [
+        [{
+          text: "🚀 Открыть WebApp",
+          web_app: {
+            url: "https://mmmgo-frontend.onrender.com"
+          }
+        }]
+      ]
+    }
+  });
+});
 
 // 🔥 ВАЖНО! Запуск сервера:
 app.listen(port, () => {
