@@ -69,7 +69,6 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
     console.error("Ошибка в /start:", error);
     await bot.sendMessage(chatId, "⚠️ Произошла ошибка при старте. Попробуйте позже.");
   }
-});
 }); // ← Вот здесь ЗАКРЫВАЕТСЯ onText
 bot.on("web_app_data", async (msg) => {
   const chatId = msg.chat.id;
