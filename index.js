@@ -36,9 +36,10 @@ app.post(secretPath, (req, res) => {
 bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
   const chatId = msg.chat.id;
   const ref = match[1];
-  const telegramId = msg.from.id;
 
   try {
+    const telegramId = msg.from.id;
+
     const playerResponse = await fetch(
       `https://mmmgo-backend.onrender.com/player/${telegramId}${ref ? `?ref=${ref}` : ""}`
     );
@@ -55,76 +56,22 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
       console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
     }
 
-    const webAppStartLink = ref
-  ? `${webAppUrl}?ref=${ref}`
-  : `${webAppUrl}?ref=${telegramId}`;
-    await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "🚀 Играть в MMMGO", url: webAppStartLink }]
-        ]
-      }
-    });
-  
+    const webAppStartLink = `https://t.me/mmmgo_bot?startapp=ref_${telegramId}`;
 
+await bot.sendMessage(chatId, `🎮 Добро пожаловать в MMMGO!\n\n🔗 Ваша реферальная ссылка:\n${webAppStartLink}`, {
+  reply_markup: {
+    inline_keyboard: [
+      [{
+        text: "🎮 Играть в MMMGO",
+        url: webAppStartLink
+      }],
+    ],
+  },
+});
   } catch (error) {
     console.error("Ошибка в /start:", error);
     await bot.sendMessage(chatId, "⚠️ Произошла ошибка при старте. Попробуйте позже.");
   }
-}); // ← Вот здесь ЗАКРЫВАЕТСЯ onText
-bot.on("web_app_data", async (msg) => {
-  const chatId = msg.chat.id;
-  const data = msg.web_app_data.data;
-
-  let title = "";
-  let description = "Поддержи игру и получи бонусы";
-  let payload = "";
-  let label = "";
-  let amount = 1000 * 10; // 10.00 RUB
-
-  if (data === "subscribe") {
-    title = "Премиум-доступ MMMGO";
-    payload = "subscribe";
-    label = "Премиум-доступ";
-  } else if (data === "topup") {
-    title = "Пакет мавродиков";
-    payload = "topup";
-    label = "50 000 мавродиков";
-  } else {
-    return; // если пришло что-то неожиданное
-  }
-
-  await bot.sendInvoice(
-    chatId,
-    title,
-    description,
-    payload,
-    process.env.PROVIDER_TOKEN,
-    "rub",
-    [{ label, amount }],
-    {
-      photo_url: "https://mmmgo-frontend.onrender.com/assets/mavrodik-clean.png",
-      need_name: true,
-      need_email: false,
-      is_flexible: false,
-    }
-  );
-});
-bot.on("message", async (msg) => {
-  const payment = msg.successful_payment;
-  if (!payment) return;
-
-  const userId = msg.from.id;
-
-  if (payment.payload === "subscribe") {
-    // Обнови подписку и фонд
-  }
-
-  if (payment.payload === "topup") {
-    // Начисли 50 000 мавродиков и обнови фонд
-  }
-
-  await bot.sendMessage(msg.chat.id, "✅ Платёж успешно обработан!");
 });
 
 // 🔥 ВАЖНО! Запуск сервера:
