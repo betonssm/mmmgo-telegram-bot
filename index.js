@@ -55,15 +55,15 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
       console.log(`ℹ️ Реферал НЕ установлен для ${telegramId} (уже есть или нет ref)`);
     }
 
-    // Сообщение и кнопка запуска игры через Game Platform
-    await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!");
-    await bot.sendGame(chatId, "mmmgo_game", {
+    const webAppStartLink = `https://t.me/mmmgo_bot?startapp=ref_${telegramId}`;
+    await bot.sendMessage(chatId, "🎮 Добро пожаловать в MMMGO!", {
       reply_markup: {
         inline_keyboard: [
-          [{ text: "🚀 Играть в MMMGO", callback_game: {} }]
+          [{ text: "🚀 Играть в MMMGO", url: webAppStartLink }]
         ]
       }
     });
+  
 
   } catch (error) {
     console.error("Ошибка в /start:", error);
@@ -123,26 +123,6 @@ bot.on("message", async (msg) => {
   }
 
   await bot.sendMessage(msg.chat.id, "✅ Платёж успешно обработан!");
-});
-// Обработка кнопки "Играть в MMMGO" через Game Platform
-bot.on("callback_query", async (query) => {
-  const gameName = query.game_short_name;
-  const chatId = query.from.id;
-
-  if (gameName !== "mmmgo_game") {
-    return bot.answerCallbackQuery({
-      callback_query_id: query.id,
-      text: "❌ Игра не найдена.",
-      show_alert: true,
-    });
-  }
-
-  const gameUrl = `https://mmmgo-frontend.onrender.com?startapp=ref_${chatId}`;
-
-  await bot.answerCallbackQuery({
-    callback_query_id: query.id,
-    url: gameUrl,
-  });
 });
 
 // 🔥 ВАЖНО! Запуск сервера:
