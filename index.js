@@ -84,7 +84,7 @@ bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const telegramId = msg.from.id;
   const userName = msg.from.first_name;
-
+/*
   // 💳 Подписка
   if (msg.web_app_data?.data === "subscribe") {
     await bot.sendInvoice(chatId, {
@@ -110,7 +110,7 @@ bot.on("message", async (msg) => {
       start_parameter: "mmmgo-topup",
     });
   }
-
+/*
   // ✅ Обработка успешного платежа
   if (msg.successful_payment) {
     const payload = msg.successful_payment.invoice_payload;
@@ -130,6 +130,7 @@ bot.on("message", async (msg) => {
       });
       await bot.sendMessage(chatId, "🎉 Подписка активирована! SR будет начисляться с 1-го числа месяца.");
     }
+    //
 
     if (payload === "mmmgo_topup") {
       await fetch("https://mmmgo-backend.onrender.com/player", {
@@ -145,9 +146,7 @@ bot.on("message", async (msg) => {
     }
   }
 });
-bot.on("pre_checkout_query", (query) => {
-  bot.answerPreCheckoutQuery(query.id, true);
-});
+*/
 // 🔬 Команда для теста WebApp-кнопки
 bot.onText(/\/webtest/, async (msg) => {
   const chatId = msg.chat.id;
@@ -163,8 +162,10 @@ bot.onText(/\/webtest/, async (msg) => {
         }]
       ]
     }
+    }
   });
 });
+
 
 // 🔥 ВАЖНО! Запуск сервера:
 app.listen(port, () => {
