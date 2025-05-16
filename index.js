@@ -84,69 +84,8 @@ bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const telegramId = msg.from.id;
   const userName = msg.from.first_name;
-/*
-  // 💳 Подписка
-  if (msg.web_app_data?.data === "subscribe") {
-    await bot.sendInvoice(chatId, {
-      title: "Подписка MMMGO",
-      description: "50 000 мавродиков и доступ к SR рейтингу",
-      payload: "mmmgo_premium",
-      provider_token: process.env.PROVIDER_TOKEN, // добавь в .env
-      currency: "USD",
-      prices: [{ label: "Подписка", amount: 1000 }],
-      start_parameter: "mmmgo-premium",
-    });
-  }
 
-  // 💰 Пополнение баланса
-  if (msg.web_app_data?.data === "topup") {
-    await bot.sendInvoice(chatId, {
-      title: "Пополнение счёта MMMGO",
-      description: "50 000 мавродиков на баланс",
-      payload: "mmmgo_topup",
-      provider_token: process.env.PROVIDER_TOKEN,
-      currency: "USD",
-      prices: [{ label: "Баланс", amount: 1000 }],
-      start_parameter: "mmmgo-topup",
-    });
-  }
-/*
-  // ✅ Обработка успешного платежа
-  if (msg.successful_payment) {
-    const payload = msg.successful_payment.invoice_payload;
-    const now = new Date();
-
-    if (payload === "mmmgo_premium") {
-      await fetch("https://mmmgo-backend.onrender.com/player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          telegramId,
-          playerName: userName,
-          isInvestor: true,
-          premiumSince: now.toISOString(),
-          premiumExpires: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(), // +30 дней
-        }),
-      });
-      await bot.sendMessage(chatId, "🎉 Подписка активирована! SR будет начисляться с 1-го числа месяца.");
-    }
-    //
-
-    if (payload === "mmmgo_topup") {
-      await fetch("https://mmmgo-backend.onrender.com/player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          telegramId,
-          playerName: userName,
-          balanceBonus: 50000,
-        }),
-      });
-      await bot.sendMessage(chatId, "💸 Баланс пополнен на 50 000 мавродиков!");
-    }
-  }
 });
-*/
 // 🔬 Команда для теста WebApp-кнопки
 bot.onText(/\/webtest/, async (msg) => {
   const chatId = msg.chat.id;
@@ -162,7 +101,7 @@ bot.onText(/\/webtest/, async (msg) => {
         }]
       ]
     }
-    }
+    
   });
 });
 
