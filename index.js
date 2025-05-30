@@ -64,11 +64,11 @@ bot.onText(/\/start(?:\s(.+))?/, async (msg, match) => {
 
     
 
-    await bot.sendMessage(chatId, `🎮 Добро пожаловать в MMMGO!`, {
+    await bot.sendMessage(chatId, `🎮 Добро пожаловать в MMMTap!`, {
       reply_markup: {
         inline_keyboard: [
           [{
-            text: "🚀 Играть в MMMGO",
+            text: "🚀 Играть в MMMTap",
             web_app: { url: `https://mmmgo-frontend.onrender.com?ref=${telegramId}` }
           }],
         ],
